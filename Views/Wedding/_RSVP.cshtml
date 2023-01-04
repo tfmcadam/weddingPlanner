@@ -1,0 +1,7 @@
+@model Reservation
+
+<form asp-action="RSVPWedding" asp-controller="Wedding" method="post">
+    <input type="hidden" asp-for="WeddingId" value="@Model.WeddingId">
+    <input type="hidden" asp-for="UserId" value="@Model.UserId">
+    <input type="submit" value="RSVP" class="btn">
+</form>

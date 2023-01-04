@@ -1,0 +1,54 @@
+@model MyWeddingModel
+<h1>Welcome @Model.User.FirstName</h1>
+<div class="border-bottom border-3"></div>
+<table class="table text-center">
+    <thead>
+        <tr>
+            <td>Wedding of</td>
+            <td>Date</td>
+            <td>Guest Count</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    @foreach (Wedding Wed in Model.AllWeddings)
+    {
+        <tr>
+            <td><a href="weddings/@Wed.WeddingId">@Wed.WedderOne & @Wed.WedderTwo</a></td>
+            <td>@Wed.Date.ToString("MM/dd/yyyy")</td>
+            <td>@Wed.Guests.Count</td>
+            <td class="d-flex justify-content-center">
+                @{
+                    if(Wed.UserId == Model.User.UserId)
+                    {
+                        <form asp-action="DestroyWedding" asp-controller="Wedding" asp-route-weddingId="@Wed.WeddingId" method="post">
+                            <input type="submit" value="Delete" class="btn">
+                        </form>
+                    }
+                    
+                }
+                @if (Wed.Guests.Any(a => a.UserId == Model.User.UserId))
+                {
+                    <form asp-action="UnRSVPWedding" asp-controller="Wedding" asp-route-weddingId="@Wed.WeddingId" method="post">
+                        <input type="submit" value="UnRSVP" class="btn">
+                    </form>
+                }
+                else
+                {
+                    Reservation reservation = new Reservation()
+                    {
+                    WeddingId = Wed.WeddingId,
+                    UserId = Model.User.UserId
+                    };
+                    @await Html.PartialAsync("_RSVP", reservation)
+                }
+
+                
+            </td>
+
+        </tr>
+    }
+    
+</table>
+
+
+    
